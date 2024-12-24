@@ -49,7 +49,7 @@ func main() {
 	http.HandleFunc("/upload", authMiddleware(handleUpload))
 	http.Handle("/files/", http.StripPrefix("/files/", http.FileServer(http.Dir(uploadDir))))
 
-	log.Printf("Server starting on port 3939")
+	log.Printf("Server starting on port 3939 with max upload size of %d bytes", maxUploadSize)
 	if err := http.ListenAndServe(":3939", nil); err != nil {
 		log.Fatal(err)
 	}

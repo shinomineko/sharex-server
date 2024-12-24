@@ -9,20 +9,37 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 )
 
 const (
-	uploadDir     = "./uploads"
-	maxUploadSize = 20 << 20 // 20MB
+	uploadDir              = "./uploads"
+	defaultMaxUploadSizeMB = 20 << 20
 )
 
-var uploadKey string
+var (
+	uploadKey     string
+	maxUploadSize int64
+)
 
 func main() {
 	uploadKey = os.Getenv("SHAREX_UPLOAD_KEY")
 	if uploadKey == "" {
 		log.Fatal("SHAREX_UPLOAD_KEY must be set")
+	}
+
+	sizeStr := os.Getenv("SHAREX_MAX_UPLOAD_SIZE_MB")
+	if sizeStr == "" {
+		maxUploadSize = defaultMaxUploadSizeMB
+	} else {
+		size, err := strconv.ParseInt(sizeStr, 10, 64)
+		if err != nil {
+			log.Printf("Invalid SHAREX_MAX_UPLOAD_SIZE_MB value '%s', using default 20MB", sizeStr)
+			maxUploadSize = defaultMaxUploadSizeMB
+		} else {
+			maxUploadSize = size << 20
+		}
 	}
 
 	if err := os.MkdirAll(uploadDir, 0755); err != nil {

@@ -8,7 +8,7 @@ variable "LABELS" {
   }
 }
 
-target "sharex-server" {
+target "default" {
   context = "."
   platforms = [ "linux/amd64", "linux/arm64" ]
   labels = LABELS

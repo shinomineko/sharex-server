@@ -14,8 +14,8 @@ import (
 )
 
 const (
-	uploadDir              = "./uploads"
-	defaultMaxUploadSizeMB = 20 << 20
+	uploadDir            = "./uploads"
+	defaultMaxUploadSize = 20
 )
 
 var (
@@ -31,12 +31,12 @@ func main() {
 
 	sizeStr := os.Getenv("SHAREX_MAX_UPLOAD_SIZE_MB")
 	if sizeStr == "" {
-		maxUploadSize = defaultMaxUploadSizeMB
+		maxUploadSize = defaultMaxUploadSize << 20
 	} else {
 		size, err := strconv.ParseInt(sizeStr, 10, 64)
 		if err != nil {
 			log.Printf("Invalid SHAREX_MAX_UPLOAD_SIZE_MB value '%s', using default 20MB", sizeStr)
-			maxUploadSize = defaultMaxUploadSizeMB
+			maxUploadSize = defaultMaxUploadSize << 20
 		} else {
 			maxUploadSize = size << 20
 		}
